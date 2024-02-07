@@ -45,13 +45,45 @@ export const signup = async (req, res) => {
       username: newUser.username,
       profilePic: newUser.profilePic,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in /api/auth/signup", error.message);
+    return res.status(500).json({ error: "internal server error" });
+  }
 };
 
-export const login = (req, res) => {
-  res.send("Login user");
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    generateTokenAndSetCookie(user._id, res);
+
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error in /api/auth/login", error.message);
+    return res.status(500).json({ error: "internal server error" });
+  }
 };
 
 export const logout = (req, res) => {
-  res.send("logout user");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    return res.status(200).json({ message: "logout successfull" });
+  } catch (error) {
+    console.error("Error in /api/auth/logout", error.message);
+    return res.status(500).json({ error: "internal server error" });
+  }
 };
