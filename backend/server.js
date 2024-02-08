@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes.js";
 
 import { connectToDB } from "./db/connect.js";
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 const app = express();
 
@@ -14,6 +15,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.send("Hello");

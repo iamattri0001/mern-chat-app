@@ -3,10 +3,8 @@ import Message from "../models/message.model.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { content, contentType } = req.body;
+    const { content, contentType, receiverId} = req.body;
     const senderId = req.user._id;
-    const { id: receiverId } = req.params;
-    console.log(content, contentType, senderId, receiverId);
     if (!content || !contentType || !senderId || !receiverId) {
       return res.status(400).json({ error: "Incomplete message data" });
     }
@@ -74,15 +72,15 @@ export const getMessages = async (req, res) => {
 
 export const deleteMessage = async (req, res) => {
   try {
-    const { msgId } = req.params;
-    const { userId } = req.user._id;
+    const { id: msgId } = req.body;
+    const userId = req.user._id;
 
     const message = await Message.findById(msgId);
     if (!message) {
-      return res.status(400).json({ error: "Couldn't delete the message" });
+      return res.status(400).json({ error: "Message not found" });
     }
 
-    if (message.senderId !== userId) {
+    if (message.senderId.toString() != userId.toString()) {
       return res
         .status(400)
         .json({ error: "You don't have permissions to delete this message" });
@@ -94,8 +92,38 @@ export const deleteMessage = async (req, res) => {
     });
 
     conversation.messages = conversation.messages.filter(
-      (msg) => msg !== message._id
+      (msg) => msg._id.toString() !== message._id.toString()
     );
-    console.log(conversation);
-  } catch (error) {}
+
+    await Promise.all([conversation.save(), Message.findByIdAndDelete(msgId)]);
+    return res.status(200).json({ message: "Message deleted" });
+  } catch (error) {
+    console.error("Error in /api/message/delete", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const editMessage = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { id:msgId, content } = req.body;
+
+    const message = await Message.findById(msgId);
+    if (!message) {
+      return res.status(400).json({ error: "Message not found" });
+    }
+
+    if (message.senderId.toString() != userId.toString()) {
+      return res
+        .status(400)
+        .json({ error: "You don't have permissions to update this message" });
+    }
+
+    message.content = content;
+    await message.save();
+    return res.status(200).json({ message: "Messaged updated" });
+  } catch (error) {
+    console.error("Error in /api/message/edit", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
