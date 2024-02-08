@@ -1,7 +1,7 @@
 import React from "react";
-import { FaPowerOff } from "react-icons/fa6";
 import { IoSparklesOutline } from "react-icons/io5";
-import { IoMdPersonAdd } from "react-icons/io";
+import AddContact from "./AddContact";
+import { Logout } from "./Logout";
 
 const Header = () => {
   return (
@@ -14,11 +14,12 @@ const Header = () => {
       </div>
 
       <div className="flex items-center justify-center gap-x-6 text-xl">
-        <FaPowerOff className="text-xl transition-all cursor-pointer hover:text-primary" />
-        <IoMdPersonAdd className="text-2xl transition-all cursor-pointer hover:text-primary" />
+        <Logout />
+        <AddContact />
       </div>
     </div>
   );
 };
 
 export default Header;
+

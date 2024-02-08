@@ -45,7 +45,7 @@ const Contact = ({
         console.log(userId);
       }}
       className={`flex items-center gap-x-5 py-4 px-6 rounded-md cursor-pointer ${
-        selected === userId ? `bg-gradient-to-tr from-accent to-primary text-black` : `hover:bg-primary/40 bg-neutral`
+        selected === userId ? `bg-gradient-to-tr from-secondary to-accent text-black` : `hover:bg-primary/40 bg-neutral`
       }`}
     >
       <div>
@@ -58,7 +58,7 @@ const Contact = ({
       </div>
       <div>
         <h4 className="font-semibold">{fullname ? fullname : "Deepanshu Attri"}</h4>
-        <span className={`text-sm ${selected === userId ? `text-black/50 hover:text-black` : `text-gray-400 hover:text-accent`}`} onClick={handleCopy}>
+        <span className={`text-sm font-bold ${selected === userId ? `text-black/50 hover:text-black` : `text-gray-400 hover:text-accent`}`} onClick={handleCopy}>
           @{username ? username : "iamattri0001"}
         </span>
       </div>

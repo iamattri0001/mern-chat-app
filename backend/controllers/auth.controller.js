@@ -59,7 +59,7 @@ export const login = async (req, res) => {
       password,
       user?.password || ""
     );
-    
+
     if (!user || !isPasswordCorrect) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
@@ -84,6 +84,20 @@ export const logout = (req, res) => {
     return res.status(200).json({ message: "logout successfull" });
   } catch (error) {
     console.error("Error in /api/auth/logout", error.message);
+    return res.status(500).json({ error: "internal server error" });
+  }
+};
+
+export const checkUsernameAvailability = async (req, res) => {
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    if (user) {
+      return res.status(200).json({ available: false });
+    }
+    return res.status(200).json({ available: true });
+  } catch (error) {
+    console.error("Error in /api/auth/available", error.message);
     return res.status(500).json({ error: "internal server error" });
   }
 };

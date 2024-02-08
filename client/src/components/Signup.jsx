@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import useSignup from "../hooks/useSignup";
 
 const Signup = () => {
-  const [loading, setLoading] = useState(false);
-  const submit = (e) => {
+  const { loading, signup } = useSignup();
+
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+
+  const submit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    toast.error("Form Submitted");
-    setTimeout(() => setLoading(false), 3000);
+    await signup(inputs);
   };
   return (
     <div className="px-5 sm:px-10 py-8 bg-base-300 flex flex-col items-center justify-center gap-y-3">
@@ -21,23 +29,29 @@ const Signup = () => {
       >
         <div>
           <input
+            onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
             type="text"
             placeholder="Full Name"
+            value={inputs.fullName}
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
           />
         </div>
 
         <div>
           <input
+            onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
             type="text"
             placeholder="Choose a username"
+            value={inputs.username}
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
           />
         </div>
 
         <div>
           <input
+            onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
             type="password"
+            value={inputs.password}
             placeholder="Choose a password"
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
           />
@@ -45,7 +59,11 @@ const Signup = () => {
 
         <div>
           <input
+            onChange={(e) =>
+              setInputs({ ...inputs, confirmPassword: e.target.value })
+            }
             type="password"
+            value={inputs.confirmPassword}
             placeholder="Cofirm your password"
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
           />
@@ -54,34 +72,45 @@ const Signup = () => {
         <div className="flex items-center justify-center gap-x-10">
           <div className="flex items-center gap-x-2">
             <input
+              onClick={(e) => setInputs({ ...inputs, gender: e.target.value })}
               id="male"
               type="radio"
               name="gender"
               className="radio radio-primary"
               value={"male"}
-              checked
             />
-            <label htmlFor="male">Male</label>
+            <label
+              htmlFor="male"
+              onClick={(e) => setInputs({ ...inputs, gender: "male" })}
+            >
+              Male
+            </label>
           </div>
           <div className="flex items-center gap-x-2">
             <input
+              onClick={(e) => setInputs({ ...inputs, gender: e.target.value })}
               id="female"
               value={"female"}
               type="radio"
               name="gender"
               className="radio radio-accent"
             />
-            <label htmlFor="female">Female</label>
+            <label
+              htmlFor="female"
+              onClick={(e) => setInputs({ ...inputs, gender: "female" })}
+            >
+              Female
+            </label>
           </div>
         </div>
 
         {!loading && (
-          <button className="bg-accent px-6 py-2 rounded-lg text-neutral">
+          <button className="bg-accent font-semibold px-6 py-2 rounded-lg text-neutral">
             Signup
           </button>
         )}
         {loading && (
-          <button className="bg-accent px-3 py-2 rounded-lg text-neutral flex items-center justify-center gap-x-3">
+          <button className="bg-accent font-semibold px-3 py-2 rounded-lg text-neutral flex items-center justify-center gap-x-3">
             <span className="loading loading-spinner"></span>
             Loading
           </button>

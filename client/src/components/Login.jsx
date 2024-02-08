@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import useLogin from "../hooks/useLogin";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-  const submit = (e) => {
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  const { loading, login } = useLogin();
+
+  const submit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    toast.error("Form Submitted");
-    setTimeout(() => setLoading(false), 3000);
+    await login({ password, username });
   };
   return (
     <div className="px-5 sm:px-10 py-8 bg-base-300 flex flex-col items-center justify-center gap-y-3">
@@ -21,6 +23,8 @@ const Login = () => {
       >
         <div>
           <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             type="text"
             placeholder="Username"
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
@@ -29,6 +33,8 @@ const Login = () => {
 
         <div>
           <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Eneter your password"
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
@@ -36,19 +42,19 @@ const Login = () => {
         </div>
 
         {!loading && (
-          <button className="bg-accent px-6 py-2 rounded-lg text-neutral">
+          <button className="bg-accent font-semibold px-6 py-2 rounded-lg text-neutral">
             Login
           </button>
         )}
         {loading && (
-          <button className="bg-accent px-3 py-2 rounded-lg text-neutral flex items-center justify-center gap-x-3">
+          <button className="bg-accent font-semibold px-3 py-2 rounded-lg text-neutral flex items-center justify-center gap-x-3">
             <span className="loading loading-spinner"></span>
             Loading
           </button>
         )}
       </form>
       <div className="mt-2 text-sm">
-        Don't have an account? {" "}
+        Don't have an account?{" "}
         <Link to={"/signup"} className="text-primary">
           Signup here
         </Link>

@@ -1,21 +1,32 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
 import { Toaster } from "react-hot-toast";
 import Home from "./components/Home";
+import { useAuth } from "./contexts/AuthContext";
 
 const App = () => {
+  const { authUser } = useAuth();
   return (
     <div
       data-theme="night"
       className="min-h-screen flex items-center justify-center"
     >
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/signup"
+          element={authUser ? <Navigate to="/" /> : <Signup />}
+        />
+        <Route
+          path="/"
+          element={authUser ? <Home /> : <Navigate to="/login" />}
+        />
       </Routes>
       <Toaster
         toastOptions={{
