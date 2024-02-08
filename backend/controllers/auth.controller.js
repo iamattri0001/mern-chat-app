@@ -38,7 +38,7 @@ export const signup = async (req, res) => {
     await newUser.save();
 
     const token = generateTokenAndSetCookie(newUser._id);
-    res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly; Path=/`);
+    res.setHeader("Set-Cookie", `jwt=${token}; HttpOnly; Path=/`);
 
     return res.status(201).json({
       _id: newUser._id,
@@ -65,7 +65,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "Invalid username or password" });
     }
     const token = generateTokenAndSetCookie(user._id, res);
-    res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly; Path=/`);
+    res.setHeader("Set-Cookie", `jwt=${token}; HttpOnly; Path=/`);
 
     return res.status(200).json({
       _id: user._id,
