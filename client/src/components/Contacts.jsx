@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 
-const Contacts = () => {
+const Contacts = ({ selected, setSelected }) => {
+  const contacts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   return (
     <div className="flex flex-col gap-y-2 h-[85%] overflow-y-scroll">
-      <Contact />
-      <Contact />
-      <Contact />
-      <Contact />
-      <Contact />
-      <Contact />
-      <Contact />
-      <Contact />
+      {contacts.map((user, i) => (
+        <Contact
+          key={i}
+          userId={user}
+          selected={selected}
+          setSelected={setSelected}
+        />
+      ))}
     </div>
   );
 };
 
 export default Contacts;
 
-const Contact = ({ fullname, userId, username, profilePic }) => {
+const Contact = ({
+  fullname,
+  userId,
+  username,
+  profilePic,
+  selected,
+  setSelected,
+}) => {
   const handleCopy = () => {
     try {
       window.navigator.clipboard.writeText(username);
@@ -28,8 +37,17 @@ const Contact = ({ fullname, userId, username, profilePic }) => {
       console.error(error.message);
     }
   };
+
   return (
-    <div className="flex items-center gap-x-5 py-4 px-6 rounded-md bg-neutral hover:bg-primary/40 cursor-pointer">
+    <div
+      onClick={() => {
+        setSelected(userId);
+        console.log(userId);
+      }}
+      className={`flex items-center gap-x-5 py-4 px-6 rounded-md cursor-pointer ${
+        selected === userId ? `bg-gradient-to-tr from-accent to-primary text-black` : `hover:bg-primary/40 bg-neutral`
+      }`}
+    >
       <div>
         <img
           className="h-10"
@@ -39,8 +57,8 @@ const Contact = ({ fullname, userId, username, profilePic }) => {
         />
       </div>
       <div>
-        <h4>{fullname ? fullname : "Deepanshu Attri"}</h4>
-        <span className="text-gray-400 hover:text-accent" onClick={handleCopy}>
+        <h4 className="font-semibold">{fullname ? fullname : "Deepanshu Attri"}</h4>
+        <span className={`text-sm ${selected === userId ? `text-black/50 hover:text-black` : `text-gray-400 hover:text-accent`}`} onClick={handleCopy}>
           @{username ? username : "iamattri0001"}
         </span>
       </div>

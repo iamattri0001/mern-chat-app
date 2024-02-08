@@ -1,5 +1,5 @@
 import React from "react";
-import { CgOptions } from "react-icons/cg";
+import { FaPowerOff } from "react-icons/fa6";
 import { IoSparklesOutline } from "react-icons/io5";
 import { IoMdPersonAdd } from "react-icons/io";
 
@@ -12,9 +12,10 @@ const Header = () => {
           MERN Chat
         </h1>
       </div>
-      <div className="flex items-center justify-center gap-x-3">
-        <IoMdPersonAdd className="text-2xl transition-all hover:text-primary cursor-pointer" />
-        <CgOptions className="text-2xl transition-all hover:text-primary cursor-pointer" />
+
+      <div className="flex items-center justify-center gap-x-6 text-xl">
+        <FaPowerOff className="text-xl transition-all cursor-pointer hover:text-primary" />
+        <IoMdPersonAdd className="text-2xl transition-all cursor-pointer hover:text-primary" />
       </div>
     </div>
   );
