@@ -2,20 +2,36 @@ import { useState } from "react";
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../contexts/AuthContext";
 
-const AddContact = () => {
+const AddContact = ({ setContacts, setSelected }) => {
   const [username, setUsername] = useState("");
-  const handleAdd = async () => {
+  const { authUser } = useAuth();
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!username) return;
+    if (authUser.username === username) {
+      toast.error("Can't add yourself as contact");
+      return;
+    }
     try {
-      const res = await fetch(`/api/contacts/get?username=${username}`);
+      const res = await fetch(`/api/contacts/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
       const data = await res.json();
       if (data.error) {
         throw new Error(data.error);
       }
-
-
-      // SEND MESSAGE TO THE FOUND USER
-
+      if (data.added) {
+        toast.success("Contact added");
+        setContacts((prevState) => {
+          return [data.user, ...prevState];
+        });
+        setSelected(data.user);
+      }
     } catch (error) {
       toast.error(error.message);
     }
@@ -32,7 +48,10 @@ const AddContact = () => {
       <dialog id="add-contact" className="modal">
         <div className="modal-box w-[26rem] max-w-5xl">
           <h3 className="font-semibold text mb-4">Add a new contact</h3>
-          <div className="flex items-center justify-center gap-x-4">
+          <form
+            onSubmit={handleAdd}
+            className="flex items-center justify-center gap-x-4"
+          >
             <input
               className="w-3/4 text-base bg-transparent ring-1 ring-gray-600 focus:ring-primary rounded-md py-2 text-gray-200 px-3 outline-none"
               placeholder="Enter the username"
@@ -45,7 +64,7 @@ const AddContact = () => {
             >
               Add
             </button>
-          </div>
+          </form>
           <div className="modal-action absolute top-[-22px] right-1">
             <form method="dialog">
               {/* if there is a button, it will close the modal */}

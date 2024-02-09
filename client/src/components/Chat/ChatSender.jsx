@@ -6,7 +6,7 @@ import { IoClose } from "react-icons/io5";
 import { IoMdSend } from "react-icons/io";
 import toast from "react-hot-toast";
 
-const ChatSender = ({ selected, setMessages }) => {
+const ChatSender = ({ selected, setMessages, setContacts }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [textContent, setTextContent] = useState("");
   const addEmoji = (e) => {
@@ -40,6 +40,12 @@ const ChatSender = ({ selected, setMessages }) => {
 
       setMessages((prevState) => {
         return [data.message, ...prevState];
+      });
+      setContacts((prevState) => {
+        const newState = prevState.filter(
+          (e) => e._id.toString() !== selected._id.toString()
+        );
+        return [selected, ...newState];
       });
     } catch (error) {
       toast.error(error.message);

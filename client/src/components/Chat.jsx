@@ -3,14 +3,14 @@ import { useAuth } from "../contexts/AuthContext";
 
 import { GrSend } from "react-icons/gr";
 import { FaGithub } from "react-icons/fa";
-import Chatbox from "./Chatbox";
+import Chatbox from "./Chat/Chatbox";
 
-const Chat = ({ selected, setSelected }) => {
+const Chat = ({ selected, setContacts }) => {
   const { authUser } = useAuth();
   return (
     <div className="h-full w-full ml-3">
       {!selected && <Welcome authUser={authUser} />}
-      {selected && <Chatbox selected={selected} />}
+      {selected && <Chatbox selected={selected} setContacts={setContacts} />}
     </div>
   );
 };

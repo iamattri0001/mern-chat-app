@@ -5,6 +5,29 @@ export const useGetMessages = ({ id }) => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
+  const loadMore = async (id) => {
+    try {
+      const res = await fetch(
+        `/api/message/${id}?from=${messages.length}&to=${
+          messages.length + 20
+        }`
+      );
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      if (data.length) {
+        setMessages((prevState) => {
+          return [...prevState, ...data];
+        });
+      } else {
+        toast.error("No more messages");
+      }
+    } catch (error) {
+      toast.error(data.error);
+    }
+  };
+
   useEffect(() => {
     const getMessages = async () => {
       setLoading(true);
@@ -24,5 +47,5 @@ export const useGetMessages = ({ id }) => {
     getMessages();
   }, [id]);
 
-  return { loading, setMessages, messages };
+  return { loading, setMessages, messages, loadMore };
 };

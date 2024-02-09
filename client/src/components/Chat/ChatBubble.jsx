@@ -14,20 +14,25 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={`chat font-semibold  ${
-        messageOwner ? `chat-end hover:bg-neutral` : `chat-start`
+        messageOwner ? `chat-end hover:bg-base-100` : `chat-start`
       }`}
     >
       <div className="chat-image avatar">
-        <div className="w-10 rounded-full">
+        <div className="w-8 rounded-full">
           <img
             alt="Avatar"
             src={messageOwner ? authUser.profilePic : selected.profilePic}
           />
         </div>
+        {hovered && (
+          <span className="text-gray-400 absolute right-1  bottom-[-20px] text-xs">
+            {getTimeStamp(msg.createdAt)}
+          </span>
+        )}
       </div>
       <div
-        className={`relative chat-bubble ${
-          messageOwner ? `chat-bubble-primary` : `chat-bubble-secondary`
+        className={`relative chat-bubble font-light ${
+          messageOwner ? `chat-bubble bg-secondary/60 text-gray-50` : `chat-bubble`
         }`}
       >
         {edited && (
@@ -40,7 +45,6 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
           </div>
         )}
         <span>{msg.content}</span>
-
         {messageOwner && hovered && (
           <div className="absolute left-[-78px] top-2 flex items-center justify-center gap-x-3">
             <DeleteMessage msg={msg} setMessages={setMessages} />
@@ -181,6 +185,38 @@ const DeleteMessage = ({ msg, setMessages }) => {
       </dialog>
     </div>
   );
+};
+
+const getTimeStamp = (timestamp) => {
+  const date = new Date(timestamp);
+  const today = new Date();
+
+  let stamp = "";
+
+  if (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  ) {
+    // If the timestamp is from today
+    stamp = `${date.getHours()}:${
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+    }`;
+  } else if (today.getDate() - date.getDate() === 1) {
+    // If the timestamp is from yesterday
+    stamp = `Yesterday ${date.getHours()}:${
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+    }`;
+  } else {
+    // For other dates
+    stamp = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()} ${date.getHours()}:${
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+    }`;
+  }
+
+  return stamp;
 };
 
 export default ChatBubble;

@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
-import { useGetMessages } from "../hooks/useGetMessages";
-import ChatContainer from "./Chat/ChatContainer";
-import ChatSender from "./Chat/ChatSender";
-const Chatbox = ({ selected }) => {
+import { useGetMessages } from "../../hooks/useGetMessages";
+import ChatContainer from "./ChatContainer";
+import ChatSender from "./ChatSender";
+const Chatbox = ({ selected, setContacts }) => {
   if (!selected) return;
 
-  const { messages, setMessages, loading } = useGetMessages({
+  const { messages, setMessages, loading, loadMore } = useGetMessages({
     id: selected._id.toString(),
   });
 
@@ -17,8 +17,13 @@ const Chatbox = ({ selected }) => {
         setMessages={setMessages}
         loading={loading}
         selected={selected}
+        loadMore={loadMore}
       />
-      <ChatSender selected={selected} setMessages={setMessages} />
+      <ChatSender
+        selected={selected}
+        setMessages={setMessages}
+        setContacts={setContacts}
+      />
     </div>
   );
 };
@@ -56,4 +61,3 @@ const ChatHeader = ({ selected }) => {
     </div>
   );
 };
-

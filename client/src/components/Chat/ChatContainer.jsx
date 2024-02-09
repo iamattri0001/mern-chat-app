@@ -1,12 +1,18 @@
-import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { IoReloadOutline } from "react-icons/io5";
 
 import ChatBubble from "./ChatBubble";
 
-const ChatContainer = ({ messages, setMessages, loading, selected }) => {
+const ChatContainer = ({
+  messages,
+  setMessages,
+  loading,
+  selected,
+  loadMore,
+}) => {
   const { authUser } = useAuth();
   return (
-    <div className="flex-grow flex justify-start gap-y-3 px-2 py-3 flex-col-reverse overflow-y-scroll">
+    <div className="flex-grow flex justify-start gap-y-3 px-6 py-5 flex-col-reverse overflow-y-scroll">
       {!loading &&
         messages.map((msg, i) => (
           <ChatBubble
@@ -27,6 +33,15 @@ const ChatContainer = ({ messages, setMessages, loading, selected }) => {
           <ChatBubbleSkeleton dir={"end"} />
           <ChatBubbleSkeleton dir={"start"} />
         </>
+      )}
+      {messages?.length >= 20 && (
+        <div
+          className="flex items-center justify-center text-accent hover:text-secondary transition-all cursor-pointer gap-x-2"
+          onClick={() => loadMore(selected._id.toString())}
+        >
+          <span>Load older messages</span>
+          <IoReloadOutline className="text-xl" />
+        </div>
       )}
     </div>
   );

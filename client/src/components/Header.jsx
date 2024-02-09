@@ -3,7 +3,7 @@ import { IoSparklesOutline } from "react-icons/io5";
 import AddContact from "./AddContact";
 import { Logout } from "./Logout";
 
-const Header = () => {
+const Header = ({ setSelected, setContacts }) => {
   return (
     <div className="flex p-4 items-center justify-between">
       <div className="flex items-center gap-x-1">
@@ -15,11 +15,10 @@ const Header = () => {
 
       <div className="flex items-center justify-center gap-x-6 text-xl">
         <Logout />
-        <AddContact />
+        <AddContact setContacts={setContacts} setSelected={setSelected} />
       </div>
     </div>
   );
 };
 
 export default Header;
-

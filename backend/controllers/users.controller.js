@@ -5,26 +5,21 @@ export const getActiveConversations = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Find conversations where the specified user is a participant
-    const conversations = await Conversation.find({
-      participants: userId,
-    }).select("participants -_id"); // Select only the participants field and exclude the _id field
+    const conversations = await Conversation.find({ participants: userId })
+      .sort({ updatedAt: -1 })
+      .populate("participants");
 
     const userIdToString = userId.toString();
-    const getUniqueIds = () => {
-      const ids = new Set();
 
-      conversations.forEach((convo) => {
-        ids.add(convo.participants[0].toString());
-        ids.add(convo.participants[1].toString());
-      });
-
-      ids.delete(userIdToString);
-      return Array.from(ids);
-    };
-
-    const userIds = getUniqueIds();
-    const users = await User.find({ _id: { $in: userIds } });
+    const users = [];
+    conversations.forEach(({ participants }) => {
+      if (participants[0]._id.toString() !== userIdToString) {
+        users.push(participants[0]);
+      }
+      if (participants[1]._id.toString() !== userIdToString) {
+        users.push(participants[1]);
+      }
+    });
 
     return res.status(200).json(users);
   } catch (error) {
@@ -43,7 +38,37 @@ export const getUser = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.error("Error in /api/user/get", error.message);
+    console.error("Error in /api/contacts/get", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const addContact = async (req, res) => {
+  try {
+    const { _id: id, username: ownUserame } = req.user;
+    const { username } = req.body;
+
+    const user = await User.findOne({ username }).select("-password");
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    if (username === ownUserame) {
+      return res.status(400).json({ error: "Can't add yourself as contact " });
+    }
+
+    const conversation = await Conversation.findOne({
+      participants: { $all: [id, user._id] },
+    });
+
+    if (conversation) {
+      return res.status(400).json({ error: "Already in contacts" });
+    }
+    await Conversation.create({ participants: [id, user._id] });
+    return res.status(200).json({ added: true, user });
+  } catch (error) {
+    console.error("Error in /api/contacts/add", error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

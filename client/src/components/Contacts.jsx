@@ -1,8 +1,5 @@
 import { toast } from "react-hot-toast";
-import useGetContacts from "../hooks/useGetContacts";
-
-const Contacts = ({ selected, setSelected }) => {
-  const { loading, contacts, setContacts } = useGetContacts();
+const Contacts = ({ selected, setSelected, loading, contacts }) => {
   return (
     <div className="flex flex-col gap-y-2 pr-1 h-[85%] overflow-y-scroll">
       {!loading &&
@@ -18,6 +15,11 @@ const Contacts = ({ selected, setSelected }) => {
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
           <ContactSkeleton key={i} />
         ))}
+      {!loading && contacts?.length === 0 && (
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
+          You don't have any contacts{" "}
+        </div>
+      )}
     </div>
   );
 };
