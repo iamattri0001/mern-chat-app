@@ -3,7 +3,7 @@ import Message from "../models/message.model.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { content, contentType, receiverId} = req.body;
+    const { content, contentType, receiverId } = req.body;
     const senderId = req.user._id;
     if (!content || !contentType || !senderId || !receiverId) {
       return res.status(400).json({ error: "Incomplete message data" });
@@ -106,7 +106,7 @@ export const deleteMessage = async (req, res) => {
 export const editMessage = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { id:msgId, content } = req.body;
+    const { id: msgId, content } = req.body;
 
     const message = await Message.findById(msgId);
     if (!message) {

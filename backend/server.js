@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
-import userRoutes from "./routes/user.routes.js";
+import contactsRoutes from "./routes/contacts.routes.js";
 
 import { connectToDB } from "./db/connect.js";
 import cookieParser from "cookie-parser";
@@ -15,34 +15,8 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    exposedHeaders: ["set-cookie"],
-  })
-);
 
-app.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,content-type,set-cookie"
-  );
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
-  next();
-});
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -50,7 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/contacts", contactsRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

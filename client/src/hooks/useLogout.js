@@ -1,8 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-hot-toast";
-import { HOST } from "../routes";
 
 const useLogout = () => {
   const [loading, setLoading] = useState(false);
@@ -11,11 +9,16 @@ const useLogout = () => {
   const logout = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.post(HOST + "/api/auth/logout");
-      if (data) {
-        localStorage.removeItem("user");
-        setAuthUser(null);
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "applicationjson" },
+      });
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
       }
+      localStorage.removeItem("user");
+      setAuthUser(null);
     } catch (error) {
       toast.error(error.messagge);
     } finally {

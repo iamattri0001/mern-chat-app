@@ -13,7 +13,7 @@ const Home = () => {
         <Searchbox />
         <Contacts selected={selected} setSelected={setSelected} />
       </div>
-      <Chat />
+      <Chat selected={selected} setSelected={setSelected} />
     </div>
   );
 };

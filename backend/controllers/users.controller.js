@@ -15,7 +15,6 @@ export const getActiveConversations = async (req, res) => {
       const ids = new Set();
 
       conversations.forEach((convo) => {
-        console.log(convo.participants);
         ids.add(convo.participants[0].toString());
         ids.add(convo.participants[1].toString());
       });

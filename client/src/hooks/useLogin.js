@@ -1,6 +1,5 @@
-import axios from "axios";
+
 import { useState } from "react";
-import { HOST } from "../routes";
 import { useAuth } from "../contexts/AuthContext";
 import toast from "react-hot-toast";
 
@@ -11,24 +10,19 @@ const useLogin = () => {
   const login = async ({ username, password }) => {
     setLoading(true);
     try {
-      const resp = await axios.post(HOST + "/api/auth/login", {
-        username,
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
-      console.log(resp);
-      const { data, status } = resp;
-      if (status === 200 && data) {
-        localStorage.setItem("user", JSON.stringify(data));
-        setAuthUser(data);
-      } else {
-        toast.error("An error occurred while logging in");
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
       }
+      localStorage.setItem("user", JSON.stringify(data));
+      setAuthUser(data);
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        toast.error("Invalid username or password");
-      } else {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
