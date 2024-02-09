@@ -32,3 +32,18 @@ export const getActiveConversations = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getUser = async (req, res) => {
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username }).select("-password");
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in /api/user/get", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

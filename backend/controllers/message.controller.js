@@ -121,7 +121,7 @@ export const editMessage = async (req, res) => {
 
     message.content = content;
     await message.save();
-    return res.status(200).json({ message: "Messaged updated" });
+    return res.status(200).json(message);
   } catch (error) {
     console.error("Error in /api/message/edit", error.message);
     return res.status(500).json({ error: "Internal server error" });
