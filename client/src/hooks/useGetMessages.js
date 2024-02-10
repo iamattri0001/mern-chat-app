@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export const useGetMessages = ({ id }) => {
+  if (!id) return;
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
   const loadMore = async (id) => {
     try {
       const res = await fetch(
-        `/api/message/${id}?from=${messages.length}&to=${
-          messages.length + 20
-        }`
+        `/api/message/${id}?from=${messages.length}&to=${messages.length + 20}`
       );
       const data = await res.json();
       if (data.error) {

@@ -4,10 +4,20 @@ import ChatSender from "./ChatSender";
 
 import { motion } from "framer-motion";
 import ChatHeader from "./ChatHeader";
+import useListenMessages from "../../hooks/useListenMessages";
+import { useEffect } from "react";
 
 const Chatbox = ({ selected, setContacts, setSelected }) => {
   const { messages, setMessages, loading, loadMore } = useGetMessages({
     id: selected?._id.toString(),
+  });
+  
+  useListenMessages({
+    setMessages,
+    messages,
+    selected,
+    setContacts,
+    setSelected,
   });
 
   return (

@@ -1,6 +1,8 @@
 import Conversation from "../models/conversation.model.js";
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
+import { getSocketId } from "../socket/socket.js";
+import { io } from "../socket/socket.js";
 
 export const getActiveConversations = async (req, res) => {
   try {
@@ -66,6 +68,12 @@ export const addContact = async (req, res) => {
     if (conversation) {
       return res.status(400).json({ error: "Already in contacts" });
     }
+
+    const receiverSocketId = getSocketId(user._id);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("addContact", user);
+    }
+
     await Conversation.create({ participants: [id, user._id] });
     return res.status(200).json({ added: true, user });
   } catch (error) {
@@ -94,6 +102,11 @@ export const deleteContact = async (req, res) => {
     );
 
     await Conversation.findByIdAndDelete(conversation._id);
+
+    const receiverSocketId = getSocketId(contactId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("deleteContact", id);
+    }
 
     res.status(200).json({ success: true });
   } catch (error) {

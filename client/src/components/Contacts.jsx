@@ -50,7 +50,11 @@ const Contact = ({ user, selected, setSelected, indexInArray }) => {
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.3 }}
       onClick={() => {
-        setSelected(user);
+        if (!selected || selected._id.toString() !== user._id.toString()) {
+          setSelected(user);
+        } else {
+          setSelected(null);
+        }
       }}
       className={`flex items-center gap-x-5 py-4 px-6 rounded-md cursor-pointer ${
         selected?._id === userId

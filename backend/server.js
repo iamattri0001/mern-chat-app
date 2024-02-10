@@ -9,7 +9,7 @@ import { connectToDB } from "./db/connect.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-const app = express();
+import { io, server, app } from "./socket/socket.js";
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.use("/api/message", messageRoutes);
 app.use("/api/contacts", contactsRoutes);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectToDB();
   console.log(`Server started on ${PORT}`);
 });

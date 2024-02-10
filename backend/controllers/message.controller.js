@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -26,6 +27,11 @@ export const sendMessage = async (req, res) => {
     }
 
     await Promise.all([conversation.save(), message.save()]);
+
+    const receiverSocketId = getSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", message);
+    }
 
     return res.status(201).json({ message });
   } catch (error) {
@@ -95,6 +101,12 @@ export const deleteMessage = async (req, res) => {
       (msg) => msg._id.toString() !== message._id.toString()
     );
 
+    const receiverId = message.receiverId;
+    const receiverSocketId = getSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("deleteMessage", message);
+    }
+
     await Promise.all([conversation.save(), Message.findByIdAndDelete(msgId)]);
     return res.status(200).json({ message: "Message deleted" });
   } catch (error) {
@@ -118,8 +130,16 @@ export const editMessage = async (req, res) => {
         .status(400)
         .json({ error: "You don't have permissions to update this message" });
     }
+
     message.content = content;
     await message.save();
+
+    const receiverId = message.receiverId.toString();
+    const receiverSocketId = getSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("editMessage", message);
+    }
+
     return res.status(200).json(message);
   } catch (error) {
     console.error("Error in /api/message/edit", error.message);
@@ -145,6 +165,11 @@ export const clearMessages = async (req, res) => {
         await Message.findByIdAndDelete(messageId);
       })
     );
+
+    const receiverSocketId = getSocketId(contactId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("clearConversation", id);
+    }
 
     conversation.messages = [];
     await conversation.save();
