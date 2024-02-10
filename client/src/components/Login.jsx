@@ -8,6 +8,9 @@ const Login = () => {
 
   const { loading, login } = useLogin();
 
+  const usernameInputRef = useState(null);
+  const passwordInputRef = useState(null);
+
   const submit = async (e) => {
     e.preventDefault();
     await login({ password, username });
@@ -23,6 +26,14 @@ const Login = () => {
       >
         <div>
           <input
+            ref={usernameInputRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowDown") {
+                if (passwordInputRef.current) {
+                  passwordInputRef.current.focus();
+                }
+              }
+            }}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             type="text"
@@ -33,11 +44,19 @@ const Login = () => {
 
         <div>
           <input
+            ref={passwordInputRef}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Enter your password"
             className="input input-bordered input-secondary sm:w-[280px] max-w-xs"
+            onKeyDown={(e) => {
+              if (e.key === "ArrowUp") {
+                if (usernameInputRef.current) {
+                  usernameInputRef.current.focus();
+                }
+              }
+            }}
           />
         </div>
 

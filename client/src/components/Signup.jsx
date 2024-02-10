@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup";
 
@@ -14,10 +13,16 @@ const Signup = () => {
     gender: "",
   });
 
+  const fullNameRef = useRef(null);
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
+
   const submit = async (e) => {
     e.preventDefault();
     await signup(inputs);
   };
+
   return (
     <div className="px-5 sm:px-10 py-8 bg-base-300 flex flex-col items-center justify-center gap-y-3">
       <h3 className="text-2xl sm:text-3xl mb-5">Signup Form</h3>
@@ -29,6 +34,14 @@ const Signup = () => {
       >
         <div>
           <input
+            ref={fullNameRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowDown") {
+                if (usernameRef.current) {
+                  usernameRef.current.focus();
+                }
+              }
+            }}
             onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
             type="text"
             placeholder="Full Name"
@@ -39,6 +52,18 @@ const Signup = () => {
 
         <div>
           <input
+            ref={usernameRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowDown") {
+                if (passwordRef.current) {
+                  passwordRef.current.focus();
+                }
+              } else if (e.key === "ArrowUp") {
+                if (fullNameRef.current) {
+                  fullNameRef.current.focus();
+                }
+              }
+            }}
             onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
             type="text"
             placeholder="Choose a username"
@@ -49,6 +74,18 @@ const Signup = () => {
 
         <div>
           <input
+            ref={passwordRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowDown") {
+                if (confirmPasswordRef.current) {
+                  confirmPasswordRef.current.focus();
+                }
+              } else if (e.key === "ArrowUp") {
+                if (usernameRef.current) {
+                  usernameRef.current.focus();
+                }
+              }
+            }}
             onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
             type="password"
             value={inputs.password}
@@ -59,6 +96,14 @@ const Signup = () => {
 
         <div>
           <input
+            ref={confirmPasswordRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowUp") {
+                if (passwordRef.current) {
+                  passwordRef.current.focus();
+                }
+              }
+            }}
             onChange={(e) =>
               setInputs({ ...inputs, confirmPassword: e.target.value })
             }
