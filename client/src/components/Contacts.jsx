@@ -67,11 +67,11 @@ const Contact = ({ user, selected, setSelected, indexInArray }) => {
         />
       </div>
       <div>
-        <h4 className="font-semibold">
+        <h4 className="font-semibold line-clamp-1 max-w-[320px]">
           {fullName ? fullName : "No name"}
         </h4>
         <span
-          className={`text-sm font-bold ${
+          className={`text-sm font-bold line-clamp-1 max-w-[320px] ${
             selected && selected._id === userId
               ? `text-black/50 hover:text-black`
               : `text-gray-400 hover:text-accent`

@@ -7,10 +7,10 @@ import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 
 const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
-  const messageOwner = msg.senderId === authUser._id.toString();
-  const edited = msg.createdAt !== msg.updatedAt;
   const [hovered, setHovered] = useState(false);
 
+  const messageOwner = msg.senderId === authUser._id.toString();
+  const edited = msg.createdAt !== msg.updatedAt;
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -32,10 +32,7 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
           </span>
         )}
       </div>
-      <motion.div
-        initial={{ x: messageOwner ? "100%" : "-100%", opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.3 }}
+      <div
         className={`relative chat-bubble max-w-[70%] font-light ${
           messageOwner
             ? `chat-bubble bg-secondary/60 text-gray-50`
@@ -58,7 +55,7 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
             <EditMessage msg={msg} setMessages={setMessages} />
           </div>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 };

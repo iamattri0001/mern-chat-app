@@ -27,7 +27,7 @@ const Welcome = ({ authUser }) => {
   return (
     <div className="h-full w-full flex flex-col items-center justify-center gap-y-2">
       <div className="flex items-center justify-center gap-x-1">
-        <h3 className="text-3xl">
+        <h3 className="text-3xl max-w-[680px] truncate">
           Welcome,{" "}
           <span className="text-accent font-semibold text-4xl">
             {authUser.fullName}
@@ -36,7 +36,7 @@ const Welcome = ({ authUser }) => {
         <img src="/logo.gif" className="h-16" />
       </div>
       <p className="text-white/40 text-sm">
-        Click on a contact to start chatting
+        Click on any contact to start chatting
       </p>
       <div className="mt-4 flex gap-x-5 items-center justify-center">
         <button className="flex items-center justify-center gap-x-1 bg-primary hover:bg-primary/80 transition-all text-base-100 font-semibold px-4 py-2 rounded-full">

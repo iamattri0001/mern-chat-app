@@ -20,9 +20,9 @@ const ChatHeader = ({ selected, setMessages, setContacts, setSelected }) => {
           className="h-12 ring-4 rounded-full ring-secondary"
         />
         <div className="flex flex-col gap-y-0">
-          <h3 className="text-lg text-primary">{selected.fullName}</h3>
+          <h3 className="text-lg text-primary truncate max-w-[560px]">{selected.fullName}</h3>
           <h5
-            className="text-accent cursor-pointer hover:text-accent/80 transition-all"
+            className="text-accent cursor-pointer hover:text-accent/80 transition-all max-w-[460px] truncate"
             title="Click to copy"
             onClick={handleCopy}
           >

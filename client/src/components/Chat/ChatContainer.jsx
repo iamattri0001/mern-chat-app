@@ -23,6 +23,11 @@ const ChatContainer = ({
             setMessages={setMessages}
           />
         ))}
+      {!loading && messages.length == 0 && (
+        <div className="w-full h-full flex items-center justify-center">
+          No messages here.
+        </div>
+      )}
       {loading && (
         <>
           <ChatBubbleSkeleton dir={"end"} />
@@ -49,9 +54,14 @@ const ChatContainer = ({
 export default ChatContainer;
 
 const ChatBubbleSkeleton = ({ dir }) => {
+  const randomWidths = ["w-1/2", "w-1/3", "w-2/5", "w-3/4"];
   return (
     <div className={`chat chat-${dir}`}>
-      <div className={`chat-bubble w-1/3 skeleton bg-neutral chat-start`}></div>
+      <div
+        className={`chat-bubble ${
+          randomWidths[Math.floor(Math.random() * randomWidths.length)]
+        } skeleton bg-neutral chat-start`}
+      ></div>
     </div>
   );
 };
