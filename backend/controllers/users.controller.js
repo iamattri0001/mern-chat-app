@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import User from "../models/user.model.js";
+import Message from "../models/message.model.js";
 
 export const getActiveConversations = async (req, res) => {
   try {
@@ -69,6 +70,34 @@ export const addContact = async (req, res) => {
     return res.status(200).json({ added: true, user });
   } catch (error) {
     console.error("Error in /api/contacts/add", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deleteContact = async (req, res) => {
+  try {
+    const id = req.user._id.toString();
+    const contactId = req.body.id;
+    if (!contactId) {
+      return res.status(400).json({ error: "Contact not sepecified" });
+    }
+    const conversation = await Conversation.findOne({
+      participants: { $all: [id, contactId] },
+    });
+
+    const messageIds = conversation.messages.map((message) => message._id);
+
+    await Promise.all(
+      messageIds.map(async (messageId) => {
+        await Message.findByIdAndDelete(messageId);
+      })
+    );
+
+    await Conversation.findByIdAndDelete(conversation._id);
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error in /api/message/clear", error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

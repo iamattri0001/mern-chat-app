@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  clearMessages,
   deleteMessage,
   editMessage,
   getMessages,
@@ -13,5 +14,6 @@ router.post("/send", protectRoute, sendMessage);
 router.post("/delete", protectRoute, deleteMessage);
 router.post("/edit", protectRoute, editMessage);
 router.get("/:id", protectRoute, getMessages);
+router.post("/clear", protectRoute, clearMessages);
 
 export default router;

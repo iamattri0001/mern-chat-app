@@ -118,12 +118,39 @@ export const editMessage = async (req, res) => {
         .status(400)
         .json({ error: "You don't have permissions to update this message" });
     }
-
     message.content = content;
     await message.save();
     return res.status(200).json(message);
   } catch (error) {
     console.error("Error in /api/message/edit", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const clearMessages = async (req, res) => {
+  try {
+    const id = req.user._id.toString();
+    const contactId = req.body.id;
+    if (!contactId) {
+      return res.status(400).json({ error: "Contact not sepecified" });
+    }
+
+    const conversation = await Conversation.findOne({
+      participants: { $all: [id, contactId] },
+    });
+    const messageIds = conversation.messages.map((message) => message._id);
+
+    await Promise.all(
+      messageIds.map(async (messageId) => {
+        await Message.findByIdAndDelete(messageId);
+      })
+    );
+
+    conversation.messages = [];
+    await conversation.save();
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error in /api/contact/delete", error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

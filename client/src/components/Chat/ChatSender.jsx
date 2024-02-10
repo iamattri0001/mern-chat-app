@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EmojiPicker from "@emoji-mart/react";
 import emojiPickerData from "@emoji-mart/data";
 import { MdEmojiEmotions } from "react-icons/md";
@@ -9,6 +9,14 @@ import toast from "react-hot-toast";
 const ChatSender = ({ selected, setMessages, setContacts }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [textContent, setTextContent] = useState("");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [inputRef]);
+
   const addEmoji = (e) => {
     const sym = e.unified.split("_");
     const codeArray = [];
@@ -53,7 +61,7 @@ const ChatSender = ({ selected, setMessages, setContacts }) => {
   };
 
   return (
-    <div className="bg-secondary/30 h-16 max-h-36 flex items-center justify-center gap-x-3 px-5 relative">
+    <div className="bg-secondary/30 h-16 max-h-36 flex items-center justify-center gap-x-3 px-5 py-3 relative">
       <button onClick={() => setPickerOpen(!pickerOpen)}>
         {pickerOpen && <IoClose className="text-2xl text-secondary" />}
         {!pickerOpen && <MdEmojiEmotions className="text-2xl text-primary" />}
@@ -79,6 +87,7 @@ const ChatSender = ({ selected, setMessages, setContacts }) => {
         onSubmit={handleSend}
       >
         <input
+          ref={inputRef}
           value={textContent}
           autoComplete="off"
           onChange={(e) => setTextContent(e.target.value)}

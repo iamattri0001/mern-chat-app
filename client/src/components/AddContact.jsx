@@ -31,6 +31,7 @@ const AddContact = ({ setContacts, setSelected }) => {
           return [data.user, ...prevState];
         });
         setSelected(data.user);
+        setUsername("");
       }
     } catch (error) {
       toast.error(error.message);

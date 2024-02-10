@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div
       data-theme="night"
-      className="min-h-screen flex items-center justify-center"
+      className="min-h-screen flex items-center justify-center overflow-hidden"
     >
       <Routes>
         <Route

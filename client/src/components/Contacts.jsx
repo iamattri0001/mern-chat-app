@@ -1,7 +1,9 @@
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
+
 const Contacts = ({ selected, setSelected, loading, contacts }) => {
   return (
-    <div className="flex flex-col gap-y-2 pr-1 h-[85%] overflow-y-scroll">
+    <div className="flex flex-col gap-y-2 pr-1 h-[85%] overflow-y-scroll overflow-x-hidden">
       {!loading &&
         contacts.map((user, i) => (
           <Contact
@@ -9,6 +11,7 @@ const Contacts = ({ selected, setSelected, loading, contacts }) => {
             user={user}
             selected={selected}
             setSelected={setSelected}
+            indexInArray={i}
           />
         ))}
       {loading &&
@@ -26,8 +29,8 @@ const Contacts = ({ selected, setSelected, loading, contacts }) => {
 
 export default Contacts;
 
-const Contact = ({ user, selected, setSelected }) => {
-  const { fullname, _id: userId, username, profilePic } = user;
+const Contact = ({ user, selected, setSelected, indexInArray }) => {
+  const { fullName, _id: userId, username, profilePic } = user;
   const handleCopy = (e) => {
     e.stopPropagation();
     try {
@@ -40,7 +43,12 @@ const Contact = ({ user, selected, setSelected }) => {
   };
 
   return (
-    <div
+    <motion.div
+      key={user._id}
+      initial={{ opacity: 0, x: -100 - 100 * indexInArray }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.3 }}
       onClick={() => {
         setSelected(user);
       }}
@@ -50,9 +58,9 @@ const Contact = ({ user, selected, setSelected }) => {
           : `hover:bg-primary/40 bg-neutral`
       }`}
     >
-      <div>
+      <div className="h-10 w-10">
         <img
-          className="h-10"
+          className="h-full"
           src={
             profilePic ? profilePic : "https://avatar.iran.liara.run/public/boy"
           }
@@ -60,7 +68,7 @@ const Contact = ({ user, selected, setSelected }) => {
       </div>
       <div>
         <h4 className="font-semibold">
-          {fullname ? fullname : "Deepanshu Attri"}
+          {fullName ? fullName : "No name"}
         </h4>
         <span
           className={`text-sm font-bold ${
@@ -73,7 +81,7 @@ const Contact = ({ user, selected, setSelected }) => {
           @{username ? username : "iamattri0001"}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

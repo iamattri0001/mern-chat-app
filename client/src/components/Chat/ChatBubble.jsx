@@ -4,6 +4,8 @@ import { FaEdit } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 
+import { motion } from "framer-motion";
+
 const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
   const messageOwner = msg.senderId === authUser._id.toString();
   const edited = msg.createdAt !== msg.updatedAt;
@@ -18,7 +20,7 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
       }`}
     >
       <div className="chat-image avatar">
-        <div className="w-8 rounded-full">
+        <div className="w-8 h-8 rounded-full">
           <img
             alt="Avatar"
             src={messageOwner ? authUser.profilePic : selected.profilePic}
@@ -30,15 +32,20 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
           </span>
         )}
       </div>
-      <div
-        className={`relative chat-bubble font-light ${
-          messageOwner ? `chat-bubble bg-secondary/60 text-gray-50` : `chat-bubble`
+      <motion.div
+        initial={{ x: messageOwner ? "100%" : "-100%", opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className={`relative chat-bubble max-w-[70%] font-light ${
+          messageOwner
+            ? `chat-bubble bg-secondary/60 text-gray-50`
+            : `chat-bubble`
         }`}
       >
         {edited && (
           <div
-            className={`badge badge-warning p-1 bottom-[-12px] text-xs absolute ${
-              messageOwner ? `left-0` : `right-0`
+            className={`badge badge-warning p-1 bottom-[-12px] text-xs font-semibold absolute ${
+              messageOwner ? `left-1` : `right-1`
             }`}
           >
             Edited
@@ -51,7 +58,7 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
             <EditMessage msg={msg} setMessages={setMessages} />
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

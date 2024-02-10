@@ -12,7 +12,7 @@ const ChatContainer = ({
 }) => {
   const { authUser } = useAuth();
   return (
-    <div className="flex-grow flex justify-start gap-y-3 px-6 py-5 flex-col-reverse overflow-y-scroll">
+    <div className="flex-grow flex justify-start gap-y-3 px-6 py-5 flex-col-reverse overflow-y-scroll overflow-x-hidden">
       {!loading &&
         messages.map((msg, i) => (
           <ChatBubble

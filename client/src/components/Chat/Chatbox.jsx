@@ -1,17 +1,30 @@
-import toast from "react-hot-toast";
 import { useGetMessages } from "../../hooks/useGetMessages";
 import ChatContainer from "./ChatContainer";
 import ChatSender from "./ChatSender";
-const Chatbox = ({ selected, setContacts }) => {
-  if (!selected) return;
 
+import { motion } from "framer-motion";
+import ChatHeader from "./ChatHeader";
+
+const Chatbox = ({ selected, setContacts, setSelected }) => {
   const { messages, setMessages, loading, loadMore } = useGetMessages({
-    id: selected._id.toString(),
+    id: selected?._id.toString(),
   });
 
   return (
-    <div className="h-full flex flex-col">
-      <ChatHeader selected={selected} />
+    <motion.div
+      key={selected?._id} // Add a key prop dependent on 'selected' to trigger animation on change
+      className="h-full flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <ChatHeader
+        selected={selected}
+        setMessages={setMessages}
+        setContacts={setContacts}
+        setSelected={setSelected}
+      />
       <ChatContainer
         messages={messages}
         setMessages={setMessages}
@@ -24,40 +37,8 @@ const Chatbox = ({ selected, setContacts }) => {
         setMessages={setMessages}
         setContacts={setContacts}
       />
-    </div>
+    </motion.div>
   );
 };
-export default Chatbox;
 
-const ChatHeader = ({ selected }) => {
-  const handleCopy = () => {
-    try {
-      window.navigator.clipboard.writeText(selected.username);
-      toast.success("Copied to Clipboard");
-    } catch (error) {
-      toast.error("Couldn't copy text");
-      console.error(error.message);
-    }
-  };
-  return (
-    <div className="bg-secondary/30 p-3 rounded-md flex items-center justify-between">
-      <div className="flex items-center justify-center gap-x-4">
-        <img
-          src={selected.profilePic}
-          alt="profilePic"
-          className="h-12 ring-4 rounded-full ring-secondary"
-        />
-        <div className="flex flex-col gap-y-0">
-          <h3 className="text-lg text-primary">{selected.fullName}</h3>
-          <h5
-            className="text-accent cursor-pointer hover:text-accent/80 transition-all"
-            title="Click to copy"
-            onClick={handleCopy}
-          >
-            @{selected.username}
-          </h5>
-        </div>
-      </div>
-    </div>
-  );
-};
+export default Chatbox;
