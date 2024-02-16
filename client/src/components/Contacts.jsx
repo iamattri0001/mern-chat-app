@@ -62,9 +62,9 @@ const Contact = ({ user, selected, setSelected, indexInArray }) => {
           : `hover:bg-primary/40 bg-neutral`
       }`}
     >
-      <div className="h-10 w-10">
+      <div className="h-12 w-12">
         <img
-          className="h-full"
+          className="h-full border-2 rounded-full border-accent"
           src={
             profilePic ? profilePic : "https://avatar.iran.liara.run/public/boy"
           }

@@ -4,7 +4,6 @@ import { FaEdit } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 
-import { motion } from "framer-motion";
 
 const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
   const [hovered, setHovered] = useState(false);
@@ -15,10 +14,16 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`chat font-semibold  ${
-        messageOwner ? `chat-end hover:bg-base-100` : `chat-start`
+      className={`chat font-semibold  relative ${
+        messageOwner ? `chat-end` : `chat-start`
       }`}
     >
+      {hovered && (
+        <span className="text-gray-400 absolute bottom-[-16px] text-xs">
+          {getTimeStamp(msg.createdAt)}
+        </span>
+      )}
+
       <div className="chat-image avatar">
         <div className="w-8 h-8 rounded-full">
           <img
@@ -26,11 +31,6 @@ const ChatBubble = ({ msg, selected, authUser, setMessages }) => {
             src={messageOwner ? authUser.profilePic : selected.profilePic}
           />
         </div>
-        {hovered && (
-          <span className="text-gray-400 absolute right-1  bottom-[-20px] text-xs">
-            {getTimeStamp(msg.createdAt)}
-          </span>
-        )}
       </div>
       <div
         className={`relative chat-bubble max-w-[70%] font-light ${

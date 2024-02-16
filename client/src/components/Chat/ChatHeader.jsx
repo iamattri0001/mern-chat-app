@@ -12,7 +12,7 @@ const ChatHeader = ({ selected, setMessages, setContacts, setSelected }) => {
     }
   };
   return (
-    <div className="bg-secondary/30 p-3 rounded-md flex items-center justify-between">
+    <div className="bg-secondary/30 p-3 flex items-center justify-between rounded-lg">
       <div className="flex items-center justify-center gap-x-4">
         <img
           src={selected.profilePic}

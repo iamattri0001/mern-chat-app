@@ -61,7 +61,7 @@ const ChatSender = ({ selected, setMessages, setContacts }) => {
   };
 
   return (
-    <div className="bg-secondary/30 h-16 max-h-36 flex items-center justify-center gap-x-3 px-5 py-3 relative">
+    <div className="bg-secondary/30 h-16 max-h-36 flex items-center justify-center gap-x-3 px-5 py-3 relative rounded-lg">
       <button onClick={() => setPickerOpen(!pickerOpen)}>
         {pickerOpen && <IoClose className="text-2xl text-secondary" />}
         {!pickerOpen && <MdEmojiEmotions className="text-2xl text-primary" />}

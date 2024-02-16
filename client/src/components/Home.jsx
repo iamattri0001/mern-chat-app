@@ -9,7 +9,7 @@ const Home = () => {
   const [selected, setSelected] = useState(null);
   const { loading, contacts, setContacts } = useGetContacts();
   return (
-    <div className="w-full sm:w-[80vw] bg-base-300 h-[90vh] px-2 py-2 rounded flex items-center">
+    <div className="w-full sm:w-[85vw] bg-base-300 h-[95vh] p-4 rounded-lg flex items-center">
       <div className="w-2/5 h-full flex flex-col">
         <Header setContacts={setContacts} setSelected={setSelected} />
         <Searchbox />

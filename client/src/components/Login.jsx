@@ -15,6 +15,7 @@ const Login = () => {
     e.preventDefault();
     await login({ password, username });
   };
+  
   return (
     <div className="px-5 sm:px-10 py-8 bg-base-300 flex flex-col items-center justify-center gap-y-3">
       <h3 className="text-2xl sm:text-3xl mb-5">Login Form</h3>
