@@ -19,7 +19,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io("https://webchat-mern.onrender.com", {
+      const socket = io("https://webchat-mern.onrender.com/", {
         query: {
           userId: authUser._id,
         },
